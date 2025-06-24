@@ -132,28 +132,31 @@ window.loginUser = function () {
 // Google Login
 window.googleLogin = function () {
   const provider = new GoogleAuthProvider();
+
   signInWithPopup(auth, provider)
     .then((result) => {
       const user = result.user;
+
+      // Save user to Realtime DB
       set(ref(db, "users/" + user.uid), {
-        uid: user.uid,
-        email: user.email,
-        provider: user.providerData[0].providerId || "google",
-        name: user.displayName || "Google User",
-        createdAt: new Date().toISOString()
+        username: user.displayName || "GoogleUser",
+        email: user.email
       });
-       // 🎉 Send Welcome Email (only if first login)
+
+      // 🎉 Send Welcome Email (only on first sign-in)
       if (user.metadata.creationTime === user.metadata.lastSignInTime) {
         emailjs.send("service_ix61biu", "template_87ducb5", {
           to_name: user.displayName || "WebCargo User",
           to_email: user.email,
           message: "Welcome to WebCargo! Thanks for signing in with Google 🚀"
         }).then(() => {
-          console.log("Welcome email sent.");
+          console.log("✅ Welcome email sent.");
         }).catch(err => {
-          console.error("Email error:", err);
+          console.error("❌ Email error:", err);
         });
       }
+
+      // Update UI
       document.getElementById("loginModal").style.display = "none";
       document.getElementById("auth-buttons").style.display = "none";
       document.getElementById("profile-dropdown").style.display = "flex";
@@ -161,6 +164,7 @@ window.googleLogin = function () {
     })
     .catch((error) => alert(error.message));
 };
+
 
 // Facebook Login
 window.facebookLogin = function () {
