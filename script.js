@@ -146,9 +146,11 @@ window.googleLogin = function () {
       // 🎉 Send Welcome Email (only on first sign-in)
       if (user.metadata.creationTime === user.metadata.lastSignInTime) {
         emailjs.send("service_ix61biu", "template_87ducb5", {
-          to_name: user.displayName || "WebCargo User",
-          to_email: user.email,
-          message: "Welcome to WebCargo! Thanks for signing in with Google 🚀"
+  to_name: user.displayName || "WebCargo User",
+  to_email: user.email,
+  website_link: "https://techtitans1.github.io/web/",
+  company_email: "webcargo.2025@gmail.com"
+
         }).then(() => {
           console.log("✅ Welcome email sent.");
         }).catch(err => {
