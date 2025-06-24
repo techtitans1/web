@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WebCargo Dashboard</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #f9fafb; color: #333;
+    }
+
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      background-color: #fff; padding: 1rem 2rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      position: sticky; top: 0; z-index: 1000; flex-wrap: wrap;
+    }
+    .nav-left { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+    .nav-logo { font-size: 1.8rem; font-weight: bold; color: #111827; }
+    .nav-links a, .dropdown-btn {
+      text-decoration: none; color: #374151;
+      font-weight: 500; margin-right: 1rem;
+      transition: color 0.3s; cursor: pointer;
+      background: none; border: none; font-size: 1rem;
+    }
+    .nav-links a:hover, .dropdown-btn:hover { color: #6366f1; }
+
+    .dropdown { position: relative; display: inline-block; }
+    .dropdown-content {
+      display: none; position: absolute; right: 0;
+      background: white; min-width: 160px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      border-radius: 8px; z-index: 1;
+    }
+    .dropdown-content a {
+      color: #374151; padding: 0.8rem 1rem;
+      text-decoration: none; display: block;
+    }
+    .dropdown-content a:hover { background-color: #f1f1f1; }
+    .dropdown:hover .dropdown-content { display: block; }
+
+    .nav-right { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .nav-right button {
+      padding: 0.5rem 1rem; border: none;
+      background-color: #6366f1; color: white;
+      border-radius: 8px; cursor: pointer;
+      font-size: 0.9rem; transition: background-color 0.3s;
+    }
+    .nav-right button:hover { background-color: #4f46e5; }
+
+    .profile-img {
+      width: 40px; height: 40px;
+      border-radius: 50%; object-fit: cover;
+      border: 2px solid #6366f1;
+    }
+
+    .dashboard { padding: 4rem 2rem; text-align: center; }
+    .dashboard h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 2rem;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      overflow: hidden;
+      text-align: left;
+      transition: transform 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+    .card:hover { transform: translateY(-8px); }
+    .card img {
+      width: 100%; height: 180px;
+      object-fit: cover;
+    }
+    .card-content {
+      padding: 1.2rem;
+    }
+    .card-content h3 {
+      font-size: 1.5rem;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+    .card-content p {
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+
+    .custom-btn {
+      background-color: #6366f1;
+      color: white;
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 2rem;
+    }
+    .custom-btn:hover {
+      background-color: #4f46e5;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.4);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      display: flex;
+      flex-direction: column;
+      width: 90%; max-width: 800px;
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    @media(min-width: 768px) {
+      .modal-content { flex-direction: row; height: auto; }
+    }
+    .modal-content .close {
+      position: absolute;
+      top: 10px; right: 20px;
+      font-size: 28px; font-weight: bold;
+      color: #555; cursor: pointer;
+    }
+    .modal-form {
+      flex: 1; padding: 2rem;
+      display: flex; flex-direction: column;
+      justify-content: center;
+    }
+    .modal-form h2 {
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      color: #111827;
+    }
+    .modal-form input {
+      margin-bottom: 1rem;
+      padding: 0.9rem;
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      background-color: #f1f5f9;
+    }
+    .modal-form button {
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .login-btn { background-color: #6366f1; color: white; }
+    .google { background-color: #db4437; color: white; }
+    .facebook { background-color: #3b5998; color: white; }
+    .modal-img {
+      flex: 1;
+      background: center/cover no-repeat;
+      min-height: 200px;
+    }
+    .modal-form a {
+      color: #6366f1;
+      text-decoration: none;
+    }
+    .or-divider {
+      text-align: center;
+      margin: 1rem 0;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-left">
+    <div class="nav-logo">WebCargo</div>
+    <div class="nav-links">
+      <a href="#">Prices</a>
+      <div class="dropdown">
+        <button class="dropdown-btn">Resources ▾</button>
+        <div class="dropdown-content">
+          <a href="#">Tutorials</a>
+          <a href="#">Templates</a>
+          <a href="#">Case Studies</a>
+        </div>
+      </div>
+      <a href="#">Customise</a>
+      <a href="#">About Us</a>
+    </div>
+  </div>
+
+  <div class="nav-right" id="auth-buttons">
+    <button onclick="document.getElementById('loginModal').style.display='flex'">Login</button>
+    <button onclick="document.getElementById('signupModal').style.display='flex'">Sign Up</button>
+  </div>
+
+  <div class="dropdown nav-right" id="profile-dropdown" style="display: none;">
+    <button class="dropdown-btn">
+      <img src="https://source.unsplash.com/40x40/?profile" class="profile-img" />
+    </button>
+    <div class="dropdown-content">
+      <a href="#">Profile</a>
+      <a href="#">Settings</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<!-- DASHBOARD -->
+<div class="dashboard">
+  <h1 id="welcome-text">Buy Your Dream Project</h1>
+  <div class="cards">
+    <a href="#" class="card"><img src="https://source.unsplash.com/featured/?healthcare"><div class="card-content"><h3>Health Care</h3><p>Medical portals, health apps, appointment systems.</p></div></a>
+    <a href="#" class="card"><img src="https://source.unsplash.com/featured/?travel"><div class="card-content"><h3>Travel</h3><p>Booking platforms, travel guides, tourism blogs.</p></div></a>
+    <a href="#" class="card"><img src="https://source.unsplash.com/featured/?ecommerce"><div class="card-content"><h3>E-Commerce</h3><p>Cart, checkout, and product listing pages.</p></div></a>
+    <a href="#" class="card"><img src="https://source.unsplash.com/featured/?education"><div class="card-content"><h3>Education</h3><p>LMS, student portals, course websites.</p></div></a>
+    <a href="#" class="card"><img src="https://source.unsplash.com/featured/?food"><div class="card-content"><h3>Food</h3><p>Recipe blogs, restaurant sites, food delivery systems.</p></div></a>
+    <a href="#" class="card"><img src="https://source.unsplash.com/featured/?programming"><div class="card-content"><h3>Programming</h3><p>Code-based projects like JS, Python, Java, etc.</p></div></a>
+  </div>
+  <button class="custom-btn" onclick="location.href='customise.html'">Customise Your Website</button>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal" id="loginModal">
+  <div class="modal-content">
+    <span class="close" onclick="document.getElementById('loginModal').style.display='none'">&times;</span>
+    <div class="modal-form">
+      <h2>Login</h2>
+      <input type="text" id="loginId" placeholder="Email or Username" />
+      <input type="password" id="loginPassword" placeholder="Password" />
+      <button class="login-btn" onclick="loginUser()"><span class="material-icons">login</span> Login</button>
+      <div class="or-divider">— or —</div>
+      <button class="google" onclick="googleLogin()"><span class="material-icons">account_circle</span> Login with Google</button>
+      <button class="facebook"><span class="material-icons">facebook</span> Login with Facebook</button>
+      <p><a href="#" onclick="document.getElementById('loginModal').style.display='none'; document.getElementById('forgotPasswordModal').style.display='flex';">Forgot Password?</a></p>
+      <p>Don't have an account? <a href="#" onclick="document.getElementById('loginModal').style.display='none'; document.getElementById('signupModal').style.display='flex';">Sign Up</a></p>
+    </div>
+    <div class="modal-img" style="background-image: url('https://source.unsplash.com/500x500/?login');"></div>
+  </div>
+</div>
+
+<!-- SIGNUP MODAL -->
+<div class="modal" id="signupModal">
+  <div class="modal-content">
+    <span class="close" onclick="document.getElementById('signupModal').style.display='none'">&times;</span>
+    <div class="modal-form">
+      <h2>Sign Up</h2>
+      <input type="text" id="signupUsername" placeholder="Choose a username" />
+      <input type="email" id="signupEmail" placeholder="Enter your email" />
+      <input type="password" id="signupPassword" placeholder="Create a password" />
+      <button class="login-btn" onclick="signupUser()"><span class="material-icons">person_add</span> Sign Up</button>
+      <div class="or-divider">— or —</div>
+      <button class="google" onclick="googleSignup()"><span class="material-icons">account_circle</span> Continue with Google</button>
+      <button class="facebook"><span class="material-icons">facebook</span> Continue with Facebook</button>
+      <p>Already have an account? <a href="#" onclick="document.getElementById('signupModal').style.display='none'; document.getElementById('loginModal').style.display='flex';">Login</a></p>
+    </div>
+    <div class="modal-img" style="background-image: url('https://source.unsplash.com/500x500/?signup');"></div>
+  </div>
+</div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div class="modal" id="forgotPasswordModal">
+  <div class="modal-content" style="flex-direction: column; align-items: center; justify-content: center;">
+    <span class="close" onclick="document.getElementById('forgotPasswordModal').style.display='none'">&times;</span>
+    <div class="modal-form" style="width: 100%; max-width: 400px; text-align: center;">
+      <h2>Reset Password</h2>
+      <input type="email" id="forgotEmail" placeholder="Enter your email" />
+      <button class="google" onclick="resetPassword()">Reset</button>
+      <p id="resetMsg" style="color: green; margin-top: 10px;"></p>
+    </div>
+  </div>
+</div>
+
+<!-- JS File -->
+<script src="dashboard.js"></script>
+</body>
+</html>
