@@ -76,6 +76,7 @@ window.signupUser = function () {
           .then(() => {
             alert("Welcome to WebCargo! We've sent you a verification email.");
           });
+        
 
         document.getElementById("signupModal").style.display = "none";
         document.getElementById("loginModal").style.display = "flex";
@@ -141,6 +142,18 @@ window.googleLogin = function () {
         name: user.displayName || "Google User",
         createdAt: new Date().toISOString()
       });
+       // 🎉 Send Welcome Email (only if first login)
+      if (user.metadata.creationTime === user.metadata.lastSignInTime) {
+        emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+          to_name: user.displayName || "WebCargo User",
+          to_email: user.email,
+          message: "Welcome to WebCargo! Thanks for signing in with Google 🚀"
+        }).then(() => {
+          console.log("Welcome email sent.");
+        }).catch(err => {
+          console.error("Email error:", err);
+        });
+      }
       document.getElementById("loginModal").style.display = "none";
       document.getElementById("auth-buttons").style.display = "none";
       document.getElementById("profile-dropdown").style.display = "flex";
