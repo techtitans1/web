@@ -54,6 +54,11 @@ window.signupUser = function () {
         usernameTaken = true;
       }
     });
+     emailjs.send("service_ix61biu", "template_87ducb5", {
+      to_email: email,
+      to_name: username,
+      message: "Welcome to WebCargo! Your account is ready to explore 🚀"
+    });
 
     if (usernameTaken) {
       alert("Username is already taken. Try another one.");
