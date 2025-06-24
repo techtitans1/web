@@ -29,7 +29,7 @@ const firebaseConfig = {
       storageBucket: "webcargo-983b3.firebasestorage.app",
       messagingSenderId: "454040988501",
       appId: "1:454040988501:web:27fe72804580044a26dddc"
- databaseURL: "https://webcargo-983b3-default-rtdb.asia-southeast1.firebasedatabase.app"
+        databaseURL: "https://webcargo-983b3-default-rtdb.asia-southeast1.firebasedatabase.app"
  };
 
 const app = initializeApp(firebaseConfig);
