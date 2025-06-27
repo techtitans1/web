@@ -23,20 +23,20 @@ import {
 
 // Your Firebase config
 const firebaseConfig = {
-      apiKey: "AIzaSyBBhefSKfFtEXO9CKtSfItmsIhQaXDMO8M",
-      authDomain: "webcargo-983b3.firebaseapp.com",
-      projectId: "webcargo-983b3",
-      storageBucket: "webcargo-983b3.firebasestorage.app",
-      messagingSenderId: "454040988501",
-     appId: "1:454040988501:web:27fe72804580044a26dddc",
-    databaseURL: "https://webcargo-983b3-default-rtdb.asia-southeast1.firebasedatabase.app"
- };
+  apiKey: "AIzaSyBBhefSKfFtEXO9CKtSfItmsIhQaXDMO8M",
+  authDomain: "webcargo-983b3.firebaseapp.com",
+  projectId: "webcargo-983b3",
+  storageBucket: "webcargo-983b3.firebasestorage.app",
+  messagingSenderId: "454040988501",
+  appId: "1:454040988501:web:27fe72804580044a26dddc",
+  databaseURL: "https://webcargo-983b3-default-rtdb.asia-southeast1.firebasedatabase.app"
+};
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getDatabase(app);
 
-// Sign Up Logic
+// ---------------- Signup ----------------
 window.signupUser = function () {
   const username = document.getElementById("signupUsername").value;
   const email = document.getElementById("signupEmail").value;
@@ -53,11 +53,6 @@ window.signupUser = function () {
       if (child.val().name === username) {
         usernameTaken = true;
       }
-    });
-     emailjs.send("service_ix61biu", "template_87ducb5", {
-      to_email: email,
-      to_name: username,
-      message: "Welcome to WebCargo! Your account is ready to explore 🚀"
     });
 
     if (usernameTaken) {
@@ -77,11 +72,12 @@ window.signupUser = function () {
           createdAt: new Date().toISOString()
         });
 
-        sendEmailVerification(user)
-          .then(() => {
-            alert("Welcome to WebCargo! We've sent you a verification email.");
-          });
-        
+        sendEmailVerification(user).then(() => {
+          alert("Welcome to WebCargo! We've sent you a verification email.");
+        });
+
+        localStorage.setItem("loggedIn", "true");
+        updateNavbar();
 
         document.getElementById("signupModal").style.display = "none";
         document.getElementById("loginModal").style.display = "flex";
@@ -92,7 +88,7 @@ window.signupUser = function () {
   });
 };
 
-// Login Logic
+// ---------------- Login ----------------
 window.loginUser = function () {
   const id = document.getElementById("loginId").value;
   const password = document.getElementById("loginPassword").value;
@@ -104,12 +100,11 @@ window.loginUser = function () {
 
   get(ref(db, "users")).then(snapshot => {
     let foundUser = null;
-    let userId = null;
+
     snapshot.forEach(child => {
       const data = child.val();
       if (data.name === id || data.email === id) {
         foundUser = data.email;
-        userId = child.key;
       }
     });
 
@@ -120,9 +115,10 @@ window.loginUser = function () {
 
     signInWithEmailAndPassword(auth, foundUser, password)
       .then((userCredential) => {
+        localStorage.setItem("loggedIn", "true");
+        updateNavbar();
+
         document.getElementById("loginModal").style.display = "none";
-        document.getElementById("auth-buttons").style.display = "none";
-        document.getElementById("profile-dropdown").style.display = "flex";
 
         get(ref(db, "users/" + userCredential.user.uid)).then(snapshot => {
           document.getElementById("welcome-text").innerText = "Welcome " + snapshot.val().name;
@@ -134,7 +130,7 @@ window.loginUser = function () {
   });
 };
 
-// Google Login
+// ---------------- Google Login ----------------
 window.googleLogin = function () {
   const provider = new GoogleAuthProvider();
 
@@ -142,38 +138,30 @@ window.googleLogin = function () {
     .then((result) => {
       const user = result.user;
 
-      // Save user to Realtime DB
       set(ref(db, "users/" + user.uid), {
         username: user.displayName || "GoogleUser",
         email: user.email
       });
 
-      // 🎉 Send Welcome Email (only on first sign-in)
       if (user.metadata.creationTime === user.metadata.lastSignInTime) {
         emailjs.send("service_ix61biu", "template_87ducb5", {
-  to_name: user.displayName || "WebCargo User",
-  to_email: user.email,
-  website_link: "https://techtitans1.github.io/web/",
-  company_email: "webcargo.2025@gmail.com"
-
-        }).then(() => {
-          console.log("✅ Welcome email sent.");
-        }).catch(err => {
-          console.error("❌ Email error:", err);
+          to_name: user.displayName || "WebCargo User",
+          to_email: user.email,
+          website_link: "https://techtitans1.github.io/web/",
+          company_email: "webcargo.2025@gmail.com"
         });
       }
 
-      // Update UI
+      localStorage.setItem("loggedIn", "true");
+      updateNavbar();
+
       document.getElementById("loginModal").style.display = "none";
-      document.getElementById("auth-buttons").style.display = "none";
-      document.getElementById("profile-dropdown").style.display = "flex";
       document.getElementById("welcome-text").innerText = "Welcome " + (user.displayName || "User");
     })
     .catch((error) => alert(error.message));
 };
 
-
-// Facebook Login
+// ---------------- Facebook Login ----------------
 window.facebookLogin = function () {
   const provider = new FacebookAuthProvider();
   signInWithPopup(auth, provider)
@@ -186,15 +174,17 @@ window.facebookLogin = function () {
         name: user.displayName || "Facebook User",
         createdAt: new Date().toISOString()
       });
+
+      localStorage.setItem("loggedIn", "true");
+      updateNavbar();
+
       document.getElementById("loginModal").style.display = "none";
-      document.getElementById("auth-buttons").style.display = "none";
-      document.getElementById("profile-dropdown").style.display = "flex";
       document.getElementById("welcome-text").innerText = "Welcome " + (user.displayName || "User");
     })
     .catch((error) => alert(error.message));
 };
 
-// Reset Password
+// ---------------- Reset Password ----------------
 window.resetPassword = function () {
   const email = document.getElementById("forgotEmail").value;
   if (!email) return alert("Please enter your email");
@@ -204,16 +194,16 @@ window.resetPassword = function () {
     .catch(err => alert(err.message));
 };
 
-// Logout
+// ---------------- Logout ----------------
 window.logout = function () {
   signOut(auth).then(() => {
-    document.getElementById("profile-dropdown").style.display = "none";
-    document.getElementById("auth-buttons").style.display = "flex";
+    localStorage.removeItem("loggedIn");
+    updateNavbar();
     document.getElementById("welcome-text").innerText = "Buy Your Dream Project";
   });
 };
 
-  const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+// ---------------- Update Navbar on Login State ----------------
 function updateNavbar() {
   const authButtons = document.getElementById("auth-buttons");
   const profileLinks = document.getElementById("profile-links");
@@ -229,23 +219,5 @@ function updateNavbar() {
   }
 }
 
-  function loginUser() {
-    localStorage.setItem("loggedIn", "true");
-    updateNavbar();
-    document.getElementById("loginModal").style.display = "none";
-  }
-
-  function signupUser() {
-    localStorage.setItem("loggedIn", "true");
-    updateNavbar();
-    document.getElementById("signupModal").style.display = "none";
-  }
-
-  function logout() {
-    localStorage.removeItem("loggedIn");
-    updateNavbar();
-    alert("You have been logged out.");
-  }
-
-  // Call on page load
-  updateNavbar();
+// Run on page load
+window.addEventListener("DOMContentLoaded", updateNavbar);
