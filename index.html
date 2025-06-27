@@ -584,12 +584,12 @@
 </script>
 <script>
   const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+function updateNavbar() {
+  const authButtons = document.getElementById("auth-buttons");
+  const profileLinks = document.getElementById("profile-links");
 
-  function updateNavbar() {
-    const authButtons = document.getElementById("auth-buttons");
-    const profileLinks = document.getElementById("profile-links");
-
-    if (isLoggedIn) {
+  if (authButtons && profileLinks) {
+    if (localStorage.getItem("loggedIn") === "true") {
       authButtons.style.display = "none";
       profileLinks.style.display = "flex";
     } else {
@@ -597,6 +597,7 @@
       profileLinks.style.display = "none";
     }
   }
+}
 
   function loginUser() {
     localStorage.setItem("loggedIn", "true");
