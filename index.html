@@ -353,20 +353,17 @@
     </div>
   </div>
 
-  <div class="nav-right" id="auth-buttons">
+ <!-- AUTH BUTTONS (shown when not logged in) -->
+<div class="nav-right" id="auth-buttons">
   <button onclick="document.getElementById('loginModal').style.display='flex'">Login</button>
   <button onclick="document.getElementById('signupModal').style.display='flex'">Sign Up</button>
 </div>
 
-<div class="dropdown nav-right" id="profile-dropdown" style="display: none;">
-  <button class="dropdown-btn">
-    <img src="https://source.unsplash.com/40x40/?profile" class="profile-img" />
-  </button>
-  <div class="dropdown-content">
-    <a href="#">Profile</a>
-    <a href="#">Settings</a>
-    <a href="#" onclick="logout()">Logout</a>
-  </div>
+<!-- PROFILE LINKS (shown when logged in) -->
+<div class="nav-right" id="profile-links" style="display: none;">
+  <a href="#" class="dropdown-btn">Profile</a>
+  <a href="#" class="dropdown-btn">Settings</a>
+  <a href="#" class="dropdown-btn" onclick="logout()">Logout</a>
 </div>
 
 </nav>
