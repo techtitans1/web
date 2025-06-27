@@ -66,40 +66,93 @@
       color: #111827;
       margin-bottom: 2rem;
     }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+	
+	.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 900px;       /* limit total width */
+  margin: 0 auto;           /* center the cards */
+  padding: 0 1rem;          /* spacing for small screens */
+}
+
     .card {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-      overflow: hidden;
-      text-align: left;
-      transition: transform 0.2s ease;
-      text-decoration: none;
-      color: inherit;
-    }
-    .card:hover { transform: translateY(-8px); }
-    .card img {
-      width: 100%; height: 180px;
-      object-fit: cover;
-    }
-    .card-content {
-      padding: 1.2rem;
-    }
-    .card-content h3 {
-      font-size: 1.5rem;
-      color: #111827;
-      margin-bottom: 0.5rem;
-    }
-    .card-content p {
-      color: #6b7280;
-      font-size: 0.95rem;
-    }
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  overflow: hidden;
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  transition: transform 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 2rem;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.card.alt {
+  flex-direction: row-reverse;
+}
+
+.card img {
+  width: 40%;
+  object-fit: cover;
+  height: 100%;
+}
+
+.card-content {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 60%;
+}
+
+.card-content h3 {
+  font-size: 1.5rem;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.card-content p {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-details {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.card-details span {
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.card-details button {
+  background-color: #6366f1;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-top: 0.5rem;
+}
+
+.card-details button:hover {
+  background-color: #4f46e5;
+}
+
 
     .custom-btn {
       background-color: #6366f1;
@@ -192,6 +245,91 @@
       margin: 1rem 0;
       color: #999;
     }
+	.footer {
+  background-color: #111;
+  color: white;
+  font-size: 14px;
+  margin-top: 4rem;
+  padding-top: 2rem;
+}
+
+.footer-top {
+  background-color: #047481;
+  text-align: center;
+  color: white;
+  padding: 1rem;
+}
+
+.footer-top p a {
+  color: white;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.footer-guides {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  font-size: 16px;
+}
+
+.footer-guides span {
+  color: #9b6ef3;
+}
+
+.footer-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 2rem;
+  padding: 2rem 4%;
+  background-color: #000;
+}
+
+.footer-column h4 {
+  color: #fff;
+  font-size: 16px;
+  margin-bottom: 1rem;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-column ul li a {
+  color: #aaa;
+  text-decoration: none;
+}
+
+.footer-column ul li a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 4%;
+  background-color: #000;
+  border-top: 1px solid #222;
+}
+
+.language-select {
+  color: #aaa;
+}
+
+.social-icons a {
+  margin-left: 1rem;
+  display: inline-block;
+}
+
   </style>
 </head>
 <body>
@@ -216,32 +354,105 @@
   </div>
 
   <div class="nav-right" id="auth-buttons">
-    <button onclick="document.getElementById('loginModal').style.display='flex'">Login</button>
-    <button onclick="document.getElementById('signupModal').style.display='flex'">Sign Up</button>
-  </div>
+  <button onclick="document.getElementById('loginModal').style.display='flex'">Login</button>
+  <button onclick="document.getElementById('signupModal').style.display='flex'">Sign Up</button>
+</div>
 
-  <div class="dropdown nav-right" id="profile-dropdown" style="display: none;">
-    <button class="dropdown-btn">
-      <img src="https://source.unsplash.com/40x40/?profile" class="profile-img" />
-    </button>
-    <div class="dropdown-content">
-      <a href="#">Profile</a>
-      <a href="#">Settings</a>
-      <a href="#" onclick="logout()">Logout</a>
-    </div>
+<div class="dropdown nav-right" id="profile-dropdown" style="display: none;">
+  <button class="dropdown-btn">
+    <img src="https://source.unsplash.com/40x40/?profile" class="profile-img" />
+  </button>
+  <div class="dropdown-content">
+    <a href="#">Profile</a>
+    <a href="#">Settings</a>
+    <a href="#" onclick="logout()">Logout</a>
   </div>
+</div>
+
 </nav>
 
 <!-- DASHBOARD -->
 <div class="dashboard">
   <h1 id="welcome-text">Buy Your Dream Project</h1>
   <div class="cards">
-    <a href="#" class="card"><img src="https://source.unsplash.com/featured/?healthcare"><div class="card-content"><h3>Health Care</h3><p>Medical portals, health apps, appointment systems.</p></div></a>
-    <a href="#" class="card"><img src="https://source.unsplash.com/featured/?travel"><div class="card-content"><h3>Travel</h3><p>Booking platforms, travel guides, tourism blogs.</p></div></a>
-    <a href="#" class="card"><img src="https://source.unsplash.com/featured/?ecommerce"><div class="card-content"><h3>E-Commerce</h3><p>Cart, checkout, and product listing pages.</p></div></a>
-    <a href="#" class="card"><img src="https://source.unsplash.com/featured/?education"><div class="card-content"><h3>Education</h3><p>LMS, student portals, course websites.</p></div></a>
-    <a href="#" class="card"><img src="https://source.unsplash.com/featured/?food"><div class="card-content"><h3>Food</h3><p>Recipe blogs, restaurant sites, food delivery systems.</p></div></a>
-    <a href="#" class="card"><img src="https://source.unsplash.com/featured/?programming"><div class="card-content"><h3>Programming</h3><p>Code-based projects like JS, Python, Java, etc.</p></div></a>
+    <a href="#" class="card">
+  <img src="C:\Users\91799\Downloads\WhatsApp Image 2025-06-22 at 18.35.24_5bf312db.jpg" />
+  <div class="card-content">
+    <h3>Health Care</h3>
+    <p>Medical portals, health apps, appointment systems.</p>
+    <div class="card-details">
+      <span><strong>Price:</strong> ₹1999</span>
+      <span><strong>Type:</strong> Web App</span>
+      <button>Enter</button>
+    </div>
+  </div>
+</a>
+
+<a href="#" class="card alt">
+  <img src="https://source.unsplash.com/featured/?travel" />
+  <div class="card-content">
+    <h3>Travel</h3>
+    <p>Booking platforms, travel guides, tourism blogs.</p>
+    <div class="card-details">
+      <span><strong>Price:</strong> ₹1499</span>
+      <span><strong>Type:</strong> Website</span>
+      <button>Enter</button>
+    </div>
+  </div>
+</a>
+
+<a href="#" class="card">
+  <img src="https://source.unsplash.com/featured/?ecommerce" />
+  <div class="card-content">
+    <h3>E-Commerce</h3>
+    <p>Cart, checkout, and product listing pages.</p>
+    <div class="card-details">
+      <span><strong>Price:</strong> ₹1799</span>
+      <span><strong>Type:</strong> Web Store</span>
+      <button>Enter</button>
+    </div>
+  </div>
+</a>
+
+<a href="#" class="card alt">
+  <img src="https://source.unsplash.com/featured/?education" />
+  <div class="card-content">
+    <h3>Education</h3>
+    <p>LMS, student portals, course websites.</p>
+    <div class="card-details">
+      <span><strong>Price:</strong> ₹1299</span>
+      <span><strong>Type:</strong> LMS</span>
+      <button>Enter</button>
+    </div>
+  </div>
+</a>
+
+<a href="#" class="card">
+  <img src="https://source.unsplash.com/featured/?food" />
+  <div class="card-content">
+    <h3>Food</h3>
+    <p>Recipe blogs, restaurant sites, food delivery systems.</p>
+    <div class="card-details">
+      <span><strong>Price:</strong> ₹999</span>
+      <span><strong>Type:</strong> Food App</span>
+      <button>Enter</button>
+    </div>
+  </div>
+</a>
+
+<a href="#" class="card alt">
+  <img src="https://source.unsplash.com/featured/?programming" />
+  <div class="card-content">
+    <h3>Programming</h3>
+    <p>Code-based projects like JS, Python, Java, etc.</p>
+    <div class="card-details">
+      <span><strong>Price:</strong> ₹2499</span>
+      <span><strong>Type:</strong> Dev Tools</span>
+      <button>Enter</button>
+    </div>
+  </div>
+</a>
+
   </div>
   <button class="custom-btn" onclick="location.href='customise.html'">Customise Your Website</button>
 </div>
@@ -296,6 +507,77 @@
     </div>
   </div>
 </div>
+
+<footer class="footer">
+  <div class="footer-top">
+    <p>Need help? <!--<a href="#">Contact our award-winning support team</a>--></p>
+    <!--<div class="footer-guides">
+      <p>We love taking your call.</p>
+      <strong>GoDaddy <span>guides</span></strong>
+      <span class="arrow">→</span>
+    </div>-->
+  </div>
+
+  <div class="footer-columns">
+    <div class="footer-column">
+      <h4>About WebCargo</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Newsroom</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Product Support</a></li>
+        <li><a href="#">Community</a></li>
+        <li><a href="#">Report Abuse</a></li>
+        <li><a href="#">Help Center</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">Templates</a></li>
+        <li><a href="#">Designers</a></li>
+        <li><a href="#">Case Studies</a></li>
+        <li><a href="#">Customer Stories</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h4>Partner Programs</h4>
+      <ul>
+        <li><a href="#">Affiliates</a></li>
+        <li><a href="#">Reseller</a></li>
+        <li><a href="#">Freelancer Deals</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Buy Projects</a></li>
+        <li><a href="#">Custom Websites</a></li>
+        <li><a href="#">Hosting</a></li>
+        <li><a href="#">SEO Help</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="language-select">
+      🌐 India – English &nbsp; ▼
+    </div>
+    <div class="social-icons">
+      <a href="#"><img src="https://img.icons8.com/ios-filled/24/ffffff/facebook--v1.png"/></a>
+      <a href="#"><img src="https://img.icons8.com/ios-filled/24/ffffff/instagram-new.png"/></a>
+      <a href="#"><img src="https://img.icons8.com/ios-filled/24/ffffff/youtube-play.png"/></a>
+    </div>
+  </div>
+</footer>
+
 
 <!-- JS File -->
 <script type="module" src="script.js"></script>
