@@ -212,3 +212,40 @@ window.logout = function () {
     document.getElementById("welcome-text").innerText = "Buy Your Dream Project";
   });
 };
+
+  const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+function updateNavbar() {
+  const authButtons = document.getElementById("auth-buttons");
+  const profileLinks = document.getElementById("profile-links");
+
+  if (authButtons && profileLinks) {
+    if (localStorage.getItem("loggedIn") === "true") {
+      authButtons.style.display = "none";
+      profileLinks.style.display = "flex";
+    } else {
+      authButtons.style.display = "flex";
+      profileLinks.style.display = "none";
+    }
+  }
+}
+
+  function loginUser() {
+    localStorage.setItem("loggedIn", "true");
+    updateNavbar();
+    document.getElementById("loginModal").style.display = "none";
+  }
+
+  function signupUser() {
+    localStorage.setItem("loggedIn", "true");
+    updateNavbar();
+    document.getElementById("signupModal").style.display = "none";
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedIn");
+    updateNavbar();
+    alert("You have been logged out.");
+  }
+
+  // Call on page load
+  updateNavbar();
