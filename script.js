@@ -1,6 +1,6 @@
-// ✅ 1) Your Firebase config — replace with YOUR actual config!
+// ✅ Initialize Firebase (make sure to replace with YOUR config!)
 const firebaseConfig = {
-  const firebaseConfig = {
+ const firebaseConfig = {
       apiKey: "AIzaSyBBhefSKfFtEXO9CKtSfItmsIhQaXDMO8M",
       authDomain: "webcargo-983b3.firebaseapp.com",
       projectId: "webcargo-983b3",
@@ -10,35 +10,31 @@ const firebaseConfig = {
     databaseURL: "https://webcargo-983b3-default-rtdb.asia-southeast1.firebasedatabase.app"
  };
 
-// ✅ 2) Initialize Firebase
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// ✅ 3) Get the form element
-const matrimonyForm = document.getElementById('matrimonyForm');
+// ✅ Handle form submit
+document.getElementById('matrimonyForm').addEventListener('submit', function(e) {
+  e.preventDefault();
 
-// ✅ 4) Listen for submit event
-matrimonyForm.addEventListener('submit', function (e) {
-  e.preventDefault(); // Stop form from submitting normally
+  // Grab all your form fields
+  const fullName = document.getElementById('fullName').value;
+  const dateOfBirth = document.getElementById('dateOfBirth').value;
+  const gender = document.getElementById('gender').value;
+  const phone = document.getElementById('phone').value;
+  const email = document.getElementById('email').value;
+  const education = document.getElementById('education').value;
+  const occupation = document.getElementById('occupation').value;
+  const salary = document.getElementById('salary').value;
+  const companyName = document.getElementById('companyName').value;
+  const place = document.getElementById('place').value;
+  const experience = document.getElementById('experience').value;
+  const fatherName = document.getElementById('fatherName').value;
+  const motherName = document.getElementById('motherName').value;
 
-  // ✅ 5) Collect all input values
-  const fullName = document.getElementById('fullName').value.trim();
-  const dateOfBirth = document.getElementById('dateOfBirth').value.trim();
-  const gender = document.getElementById('gender').value.trim();
-  const phone = document.getElementById('phone').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const education = document.getElementById('education').value.trim();
-  const occupation = document.getElementById('occupation').value.trim();
-  const salary = document.getElementById('salary').value.trim();
-  const companyName = document.getElementById('companyName').value.trim();
-  const place = document.getElementById('place').value.trim();
-  const experience = document.getElementById('experience').value.trim();
-  const fatherName = document.getElementById('fatherName').value.trim();
-  const motherName = document.getElementById('motherName').value.trim();
-
-  // ✅ 6) Save to Firebase Database
-  const newFormRef = database.ref('matrimonyForms').push();
-  newFormRef.set({
+  // ✅ Save to /matrimonyForms root section
+  database.ref('matrimonyForms').push().set({
     fullName: fullName,
     dateOfBirth: dateOfBirth,
     gender: gender,
@@ -51,15 +47,14 @@ matrimonyForm.addEventListener('submit', function (e) {
     place: place,
     experience: experience,
     fatherName: fatherName,
-    motherName: motherName,
-    timestamp: new Date().toISOString()
+    motherName: motherName
   })
   .then(() => {
-    alert('Form submitted successfully!');
-    matrimonyForm.reset(); // Clear the form
+    alert('✅ Form submitted successfully!');
+    document.getElementById('matrimonyForm').reset();
   })
   .catch((error) => {
-    alert('Error saving form: ' + error.message);
-    console.error(error);
+    console.error('❌ Error saving data:', error);
+    alert('Error saving data. Check console.');
   });
 });
