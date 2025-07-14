@@ -1,5 +1,4 @@
-// ✅ 1) Your Firebase config
-// Replace these values with your actual Firebase project settings!
+// ✅ 1) Your Firebase config — replace with YOUR actual config!
 const firebaseConfig = {
   const firebaseConfig = {
       apiKey: "AIzaSyBBhefSKfFtEXO9CKtSfItmsIhQaXDMO8M",
@@ -10,49 +9,35 @@ const firebaseConfig = {
      appId: "1:454040988501:web:27fe72804580044a26dddc",
     databaseURL: "https://webcargo-983b3-default-rtdb.asia-southeast1.firebasedatabase.app"
  };
+
 // ✅ 2) Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
-// ✅ 3) Get reference to your form
+// ✅ 3) Get the form element
 const matrimonyForm = document.getElementById('matrimonyForm');
 
-// ✅ 4) Listen for form submit
-matrimonyForm.addEventListener('submit', submitForm);
+// ✅ 4) Listen for submit event
+matrimonyForm.addEventListener('submit', function (e) {
+  e.preventDefault(); // Stop form from submitting normally
 
-// ✅ 5) Handle form submit
-function submitForm(e) {
-  e.preventDefault();
+  // ✅ 5) Collect all input values
+  const fullName = document.getElementById('fullName').value.trim();
+  const dateOfBirth = document.getElementById('dateOfBirth').value.trim();
+  const gender = document.getElementById('gender').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const education = document.getElementById('education').value.trim();
+  const occupation = document.getElementById('occupation').value.trim();
+  const salary = document.getElementById('salary').value.trim();
+  const companyName = document.getElementById('companyName').value.trim();
+  const place = document.getElementById('place').value.trim();
+  const experience = document.getElementById('experience').value.trim();
+  const fatherName = document.getElementById('fatherName').value.trim();
+  const motherName = document.getElementById('motherName').value.trim();
 
-  // ✅ 6) Get all form values
-  const fullName = document.getElementById('fullName').value;
-  const dateOfBirth = document.getElementById('dateOfBirth').value;
-  const gender = document.getElementById('gender').value;
-  const phone = document.getElementById('phone').value;
-  const email = document.getElementById('email').value;
-  const education = document.getElementById('education').value;
-  const occupation = document.getElementById('occupation').value;
-  const salary = document.getElementById('salary').value;
-  const companyName = document.getElementById('companyName').value;
-  const place = document.getElementById('place').value;
-  const experience = document.getElementById('experience').value;
-  const fatherName = document.getElementById('fatherName').value;
-  const motherName = document.getElementById('motherName').value;
-
-  // ✅ 7) Save data to Firebase
-  saveMatrimonyForm(fullName, dateOfBirth, gender, phone, email, education, occupation, salary, companyName, place, experience, fatherName, motherName);
-
-  // ✅ 8) Show success message
-  alert('Your details have been submitted successfully!');
-
-  // ✅ 9) Reset form
-  matrimonyForm.reset();
-}
-
-// ✅ 10) Save function
-function saveMatrimonyForm(fullName, dateOfBirth, gender, phone, email, education, occupation, salary, companyName, place, experience, fatherName, motherName) {
-  // Create a new entry under 'matrimonyForms'
-  const newFormRef = firebase.database().ref('matrimonyForms').push();
-
+  // ✅ 6) Save to Firebase Database
+  const newFormRef = database.ref('matrimonyForms').push();
   newFormRef.set({
     fullName: fullName,
     dateOfBirth: dateOfBirth,
@@ -66,6 +51,15 @@ function saveMatrimonyForm(fullName, dateOfBirth, gender, phone, email, educatio
     place: place,
     experience: experience,
     fatherName: fatherName,
-    motherName: motherName
+    motherName: motherName,
+    timestamp: new Date().toISOString()
+  })
+  .then(() => {
+    alert('Form submitted successfully!');
+    matrimonyForm.reset(); // Clear the form
+  })
+  .catch((error) => {
+    alert('Error saving form: ' + error.message);
+    console.error(error);
   });
-}
+});
