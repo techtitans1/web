@@ -1,13 +1,14 @@
 // ✅ 1. Initialize Firebase with your config
 const firebaseConfig = {
-      apiKey: "AIzaSyBBhefSKfFtEXO9CKtSfItmsIhQaXDMO8M",
-      authDomain: "webcargo-983b3.firebaseapp.com",
-      projectId: "webcargo-983b3",
-      storageBucket: "webcargo-983b3.firebasestorage.app",
-      messagingSenderId: "454040988501",
-     appId: "1:454040988501:web:27fe72804580044a26dddc",
-    databaseURL: "https://webcargo-983b3-default-rtdb.asia-southeast1.firebasedatabase.app"
- };
+  apiKey: "AIzaSyBBhefSKfFtEXO9CKtSfItmsIhQaXDMO8M",
+  authDomain: "webcargo-983b3.firebaseapp.com",
+  projectId: "webcargo-983b3",
+  storageBucket: "webcargo-983b3.appspot.com",  // ✅ Correct
+  messagingSenderId: "454040988501",
+  appId: "1:454040988501:web:27fe72804580044a26dddc",
+  databaseURL: "https://webcargo-983b3-default-rtdb.asia-southeast1.firebasedatabase.app"
+};
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
